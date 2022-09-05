@@ -552,6 +552,7 @@ public extension Date {
                     formatter.timeZone = timeZone
                     formatter.locale = locale
                     formatter.isLenient = isLenient
+                    formatter.calendar = Calendar.gregorian
                     Date.cachedDateFormatters.register(hashKey: hashKey, formatter: formatter)
                 }
                 return Date.cachedDateFormatters.retrieve(hashKey: hashKey)
@@ -570,6 +571,7 @@ public extension Date {
                 formatter.timeZone = timeZone
                 formatter.locale = locale
                 formatter.isLenient = isLenient
+                formatter.calendar = Calendar.gregorian
                 Date.cachedDateFormatters.register(hashKey: hashKey, formatter: formatter)
             }
             return Date.cachedDateFormatters.retrieve(hashKey: hashKey)
