@@ -6,6 +6,10 @@
 
 import Foundation
 
+public extension Calendar {
+    static var gregorian = Calendar(identifier: .gregorian)
+}
+
 // swiftlint:disable file_length
 public extension Date {
 
@@ -265,7 +269,7 @@ public extension Date {
         case .isWeekday:
             return !compare(.isWeekend)
         case .isWeekend:
-            if let range = Calendar.current.maximumRange(of: Calendar.Component.weekday) {
+            if let range = Calendar.gregorian.maximumRange(of: Calendar.Component.weekday) {
                 return (component(.weekday) == range.lowerBound || component(.weekday) == range.upperBound - range.lowerBound)
             }
         }
@@ -297,7 +301,7 @@ public extension Date {
         case .year:
                 dateComp.year = value
         }
-        return Calendar.current.date(byAdding: dateComp, to: self)
+        return Calendar.gregorian.date(byAdding: dateComp, to: self)
     }
 
     /// Sets a new value to the specified component and returns as a new date
@@ -308,13 +312,13 @@ public extension Date {
         comp.hour = hour ?? comp.hour
         comp.minute = minute ?? comp.minute
         comp.second = second ?? comp.second
-        return Calendar.current.date(from: comp)
+        return Calendar.gregorian.date(from: comp)
     }
 
     // MARK: - Date for...
 
     // swiftlint:disable:next cyclomatic_complexity
-    func adjust(for type: DateAdjustmentType, calendar: Calendar = Calendar.current) -> Date? {
+    func adjust(for type: DateAdjustmentType, calendar: Calendar = Calendar.gregorian) -> Date? {
         switch type {
         case .startOfDay:
             return adjust(hour: 0, minute: 0, second: 0)
@@ -335,14 +339,14 @@ public extension Date {
             components.year = tomorrow?.component(.year)
             components.month = tomorrow?.component(.month)
             components.day = tomorrow?.component(.day)
-            return Calendar.current.date(from: components)
+            return Calendar.gregorian.date(from: components)
         case .yesterday:
             let tomorrow = Date().offset(.day, value: -1)
             var components = Date.components(self)
             components.year = tomorrow?.component(.year)
             components.month = tomorrow?.component(.month)
             components.day = tomorrow?.component(.day)
-            return Calendar.current.date(from: components)
+            return Calendar.gregorian.date(from: components)
         case .nearestMinute(let minute):
             if let component = component(.minute) {
                 let value = max(min(minute, 60), 0)
@@ -372,7 +376,7 @@ public extension Date {
     // MARK: - Time since...
 
     func since(_ date: Date, in component: DateComponentType) -> Int64? {
-        let calendar = Calendar.current
+        let calendar = Calendar.gregorian
         switch component {
         case .second, .minute, .hour:
             let interval = timeIntervalSince(date)
@@ -415,7 +419,7 @@ public extension Date {
     func numberOfDaysInMonth() -> Int? {
         let day = Calendar.Component.day
         let month = Calendar.Component.month
-        if let range = Calendar.current.range(of: day, in: month, for: self) {
+        if let range = Calendar.gregorian.range(of: day, in: month, for: self) {
             return range.upperBound - range.lowerBound
         }
         return nil
@@ -444,7 +448,7 @@ public extension Date {
         [.year, .month, .day, .weekOfYear, .hour, .minute, .second, .weekday, .weekdayOrdinal, .weekOfYear]
     }
     internal static func components(_ fromDate: Date) -> DateComponents {
-        Calendar.current.dateComponents(Date.componentFlags(), from: fromDate)
+        Calendar.gregorian.dateComponents(Date.componentFlags(), from: fromDate)
     }
 
     // MARK: Formatter
